@@ -1,0 +1,19 @@
+id: test-apache-detect
+
+info:
+  name: Apache HTTP Server Detection
+  author: clawsec-team
+  severity: info
+  description: Detects Apache HTTP Server via response headers
+  tags: apache,tech
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers:
+      - type: word
+        words:
+          - "Apache"
+        part: header
+        condition: or

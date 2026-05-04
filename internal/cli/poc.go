@@ -1,10 +1,17 @@
 package cli
 
 import (
+	"context"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
+	"github.com/clawsec/clawsec/internal/config"
+	"github.com/clawsec/clawsec/internal/logger"
+	"github.com/clawsec/clawsec/internal/output"
+	"github.com/clawsec/clawsec/pkg/engine/poc"
 	"github.com/spf13/cobra"
 )
 
@@ -22,6 +29,7 @@ func newPoCCommand() *cobra.Command {
 		threads      int
 		bulkSize     int
 		retries      int
+		timeout      int
 	)
 
 	pocCmd := &cobra.Command{
@@ -41,10 +49,10 @@ Examples:
   clawsec poc run -t CVE-2021-41773.yaml -u http://target.com
 
   # Run all templates in a directory against multiple targets
-  clawsec poc run -td ./poc/ -u targets.txt
+  clawsec poc run -d ./poc/ -u targets.txt
 
   # Run templates filtered by severity and tags
-  clawsec poc run -td ./nuclei-templates/ -u targets.txt -s critical,high -t cve,rce
+  clawsec poc run -d ./nuclei-templates/ -u targets.txt -s critical,high -t cve,rce
 
   # Update templates from remote repository
   clawsec poc update
@@ -62,25 +70,106 @@ Examples:
 				return fmt.Errorf("no target URLs specified, use -u flag")
 			}
 			if len(templates) == 0 && templateDir == "" {
-				return fmt.Errorf("no templates specified, use -t or -td flag")
+				return fmt.Errorf("no templates specified, use -t or -d flag")
 			}
 
-			fmt.Printf("[INF] PoC Engine initializing...\n")
-			fmt.Printf("[INF] Targets: %d | Templates: %v | Threads: %d\n",
-				len(targetURLs), templates, threads)
-			fmt.Println("[INF] PoC engine - implementation in progress (Phase 3)")
+			cfg := config.Get()
+
+			// Load templates
+			var templatePaths []string
+			for _, t := range templates {
+				if info, err := os.Stat(t); err == nil && info.IsDir() {
+					templatePaths = append(templatePaths, t)
+				} else {
+					templatePaths = append(templatePaths, t)
+				}
+			}
+			if templateDir != "" {
+				templatePaths = append(templatePaths, templateDir)
+			}
+
+			logger.Infof("Loading templates from %d paths...", len(templatePaths))
+			loadedTemplates, err := poc.LoadTemplatesFromPaths(templatePaths)
+			if err != nil {
+				return fmt.Errorf("failed to load templates: %w", err)
+			}
+			logger.Infof("Loaded %d templates", len(loadedTemplates))
+
+			// Filter templates
+			loadedTemplates = poc.FilterTemplates(loadedTemplates, severity, tags)
+			logger.Infof("After filtering: %d templates", len(loadedTemplates))
+
+			if len(loadedTemplates) == 0 {
+				return fmt.Errorf("no templates match the specified criteria")
+			}
+
+			// Setup output
+			var outWriter = os.Stdout
+			if cfg.OutputFile != "" {
+				f, err := os.Create(cfg.OutputFile)
+				if err != nil {
+					return fmt.Errorf("failed to create output file: %w", err)
+				}
+				defer f.Close()
+				outWriter = f
+			}
+			out := output.NewWriter(output.ParseFormat(cfg.OutputFormat), outWriter)
+			defer out.Close()
+
+			// Execute templates
+			if threads == 0 {
+				threads = 25
+			}
+			executor := poc.NewExecutor(threads, timeout)
+
+			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+			defer cancel()
+
+			logger.Infof("Starting PoC execution - templates: %d, targets: %d, threads: %d",
+				len(loadedTemplates), len(targetURLs), threads)
+			startTime := time.Now()
+
+			matchedCount := 0
+			for result := range executor.ExecuteMultiple(ctx, loadedTemplates, targetURLs) {
+				matchedCount++
+				logger.Infof("[VUL] %s - %s (%s) - %s",
+					result.TemplateID,
+					result.Info.Name,
+					result.Info.Severity,
+					result.URL)
+
+				// Output result
+				out.WriteResult(output.Result{
+					Timestamp:  result.MatchedAt,
+					Type:       "vulnerability",
+					Level:      result.Info.Severity,
+					Host:       result.Host,
+					URL:        result.URL,
+					TemplateID: result.TemplateID,
+					Name:       result.Info.Name,
+					Severity:   result.Info.Severity,
+					Message:    fmt.Sprintf("%s - %s", result.TemplateID, result.Info.Name),
+					Metadata:   result.Meta,
+				})
+			}
+
+			elapsed := time.Since(startTime)
+			logger.Infof("PoC execution complete in %v", elapsed.Round(time.Millisecond))
+			logger.Infof("Results: %d vulnerabilities found", matchedCount)
+
 			return nil
 		},
 	}
 	runCmd.Flags().StringArrayVarP(&targetURLs, "url", "u", nil, "target URLs/files (required)")
 	runCmd.Flags().StringArrayVarP(&templates, "template", "t", nil, "template files")
 	runCmd.Flags().StringVarP(&templateDir, "template-dir", "d", "", "template directory")
-	runCmd.Flags().StringArrayVarP(&severity, "severity", "s", nil, "filter by severity (critical,high,medium,low,info)")
+	runCmd.Flags().StringArrayVar(&severity, "severity", nil, "filter by severity (critical,high,medium,low,info)")
 	runCmd.Flags().StringArrayVar(&tags, "tags", nil, "filter by tags")
 	runCmd.Flags().StringVarP(&workflow, "workflow", "w", "", "workflow file for chained execution")
 	runCmd.Flags().IntVar(&threads, "threads", 25, "concurrent threads")
 	runCmd.Flags().IntVar(&bulkSize, "bulk-size", 25, "bulk size for templates")
 	runCmd.Flags().IntVar(&retries, "retries", 1, "number of retries")
+	runCmd.Flags().IntVar(&timeout, "timeout", 10, "request timeout in seconds")
 	runCmd.MarkFlagRequired("url")
 
 	// Update subcommand
@@ -110,7 +199,7 @@ Examples:
 	}
 	listCmd.Flags().StringVarP(&templateDir, "template-dir", "d", "", "template directory")
 	listCmd.Flags().BoolVar(&stats, "stats", false, "show template statistics")
-	listCmd.Flags().StringArrayVarP(&severity, "severity", "s", nil, "filter by severity")
+	listCmd.Flags().StringArrayVar(&severity, "severity", nil, "filter by severity")
 	listCmd.Flags().StringArrayVar(&tags, "tags", nil, "filter by tags")
 
 	pocCmd.AddCommand(runCmd, updateCmd, listCmd)

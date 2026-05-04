@@ -1,0 +1,20 @@
+id: test-nginx-detect
+
+info:
+  name: Nginx Server Detection
+  author: clawsec-team
+  severity: info
+  description: Detects Nginx via response headers
+  tags: nginx,tech
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers:
+      - type: word
+        words:
+          - "nginx"
+          - "Nginx"
+        part: header
+        condition: or
