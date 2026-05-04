@@ -154,9 +154,24 @@ func (l *Logger) Fatalf(format string, args ...interface{}) { l.log(FatalLevel, 
 func (l *Logger) SetLevel(level Level) { l.level = level }
 
 // Global shortcuts
-func Debugf(format string, args ...interface{}) { defaultLogger.Debugf(format, args...) }
-func Infof(format string, args ...interface{})  { defaultLogger.Infof(format, args...) }
-func Warnf(format string, args ...interface{})  { defaultLogger.Warnf(format, args...) }
-func Errorf(format string, args ...interface{}) { defaultLogger.Errorf(format, args...) }
-func Fatalf(format string, args ...interface{}) { defaultLogger.Fatalf(format, args...) }
-func SetLevel(level Level)                      { defaultLogger.SetLevel(level) }
+func Debugf(format string, args ...interface{}) {
+	if defaultLogger != nil { defaultLogger.Debugf(format, args...) }
+}
+func Infof(format string, args ...interface{}) {
+	if defaultLogger != nil { defaultLogger.Infof(format, args...) }
+}
+func Warnf(format string, args ...interface{}) {
+	if defaultLogger != nil { defaultLogger.Warnf(format, args...) }
+}
+func Errorf(format string, args ...interface{}) {
+	if defaultLogger != nil { defaultLogger.Errorf(format, args...) }
+}
+func Fatalf(format string, args ...interface{}) {
+	if defaultLogger != nil { defaultLogger.Fatalf(format, args...) } else {
+		fmt.Fprintf(os.Stderr, format+"\n", args...)
+		os.Exit(1)
+	}
+}
+func SetLevel(level Level) {
+	if defaultLogger != nil { defaultLogger.SetLevel(level) }
+}
