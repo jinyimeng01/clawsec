@@ -1,0 +1,48 @@
+# Binaries
+bin/
+dist/
+*.exe
+*.dll
+*.so
+*.dylib
+clawsec
+
+# Test artifacts
+*.test
+*.out
+coverage.html
+coverage.out
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Config (local)
+config.local.yaml
+config.local.yml
+*.local.json
+
+# Logs
+*.log
+
+# Dependency directories
+vendor/
+
+# Go workspace
+go.work
+
+# AI Brain build artifacts
+ai-brain/dist/
+ai-brain/node_modules/
+ai-brain/*.lock
+
+# Temporary files
+tmp/
+temp/

@@ -1,0 +1,98 @@
+version: '3'
+
+vars:
+  BINARY_NAME: clawsec
+  BUILD_DIR: bin
+  VERSION:
+    sh: git describe --tags --always --dirty 2>/dev/null || echo "dev"
+  BUILD_TIME:
+    sh: date -u +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || echo "dev"
+  GIT_COMMIT:
+    sh: git rev-parse --short HEAD 2>/dev/null || echo "dev"
+  GIT_BRANCH:
+    sh: git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "dev"
+  LDFLAGS: >-
+    -s -w
+    -X github.com/clawsec/clawsec/internal/constants.Version={{.VERSION}}
+    -X github.com/clawsec/clawsec/internal/constants.BuildTime={{.BUILD_TIME}}
+    -X github.com/clawsec/clawsec/internal/constants.GitCommit={{.GIT_COMMIT}}
+    -X github.com/clawsec/clawsec/internal/constants.GitBranch={{.GIT_BRANCH}}
+
+tasks:
+  default:
+    cmds:
+      - task: build
+
+  build:
+    desc: Build binary for current platform
+    cmds:
+      - mkdir -p {{.BUILD_DIR}}
+      - go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/{{.BINARY_NAME}} ./cmd/clawsec
+    sources:
+      - "**/*.go"
+      - go.mod
+      - go.sum
+
+  clean:
+    desc: Clean build artifacts
+    cmds:
+      - rm -rf {{.BUILD_DIR}}
+      - go clean -cache
+
+  test:
+    desc: Run all tests with coverage
+    cmds:
+      - go test -v -race -coverprofile=coverage.out ./...
+      - echo "Coverage report: coverage.out"
+
+  fmt:
+    desc: Format Go source code
+    cmds:
+      - go fmt ./...
+
+  lint:
+    desc: Run linter
+    cmds:
+      - golangci-lint run ./...
+
+  install:
+    desc: Install binary
+    deps: [build]
+    cmds:
+      - cp {{.BUILD_DIR}}/{{.BINARY_NAME}} $GOPATH/bin/ || cp {{.BUILD_DIR}}/{{.BINARY_NAME}} $HOME/go/bin/
+
+  build:target:
+    desc: Build for specific target (GOOS/GOARCH)
+    cmds:
+      - mkdir -p {{.BUILD_DIR}}
+      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/{{.BINARY_NAME}}-{{.GOOS}}-{{.GOARCH}}{{ext}} ./cmd/clawsec
+    vars:
+      GOOS: '{{default "linux" .GOOS}}'
+      GOARCH: '{{default "amd64" .GOARCH}}'
+
+  package:
+    desc: Build and package for distribution
+    deps: [build]
+    cmds:
+      - tar -czf {{.BUILD_DIR}}/{{.BINARY_NAME}}-{{.VERSION}}-{{OS}}-{{ARCH}}.tar.gz -C {{.BUILD_DIR}} {{.BINARY_NAME}}
+
+  run:version:
+    desc: Build and run version
+    deps: [build]
+    cmds:
+      - ./{{.BUILD_DIR}}/{{.BINARY_NAME}} version
+
+  run:help:
+    desc: Build and show help
+    deps: [build]
+    cmds:
+      - ./{{.BUILD_DIR}}/{{.BINARY_NAME}} --help
+
+  cross-compile:
+    desc: Build for all platforms
+    cmds:
+      - task: build:target GOOS=linux GOARCH=amd64
+      - task: build:target GOOS=linux GOARCH=arm64
+      - task: build:target GOOS=darwin GOARCH=amd64
+      - task: build:target GOOS=darwin GOARCH=arm64
+      - task: build:target GOOS=windows GOARCH=amd64
