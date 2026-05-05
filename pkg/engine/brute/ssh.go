@@ -2,7 +2,6 @@ package brute
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"time"
 
@@ -55,7 +54,7 @@ func (p *SSHProtocol) Try(ctx context.Context, target, username, password string
 	defer client.Close()
 
 	result.Success = true
-	result.Banner = client.ServerVersion()
+	result.Banner = string(client.ServerVersion())
 	return result, nil
 }
 

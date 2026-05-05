@@ -3,14 +3,11 @@ package crawler
 import (
 	"bufio"
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 	"strings"
 	"sync"
 	"time"
-
-	"github.com/clawsec/clawsec/internal/logger"
 )
 
 // DirResult represents a directory busting result
@@ -29,6 +26,11 @@ type DirBuster struct {
 	threads int
 	statusFilter []int
 	sizeFilter   map[int]bool
+}
+
+// SetStatusFilter overrides the default status code filter
+func (d *DirBuster) SetStatusFilter(codes []int) {
+	d.statusFilter = codes
 }
 
 // NewDirBuster creates a new directory buster

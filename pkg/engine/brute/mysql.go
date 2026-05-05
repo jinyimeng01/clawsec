@@ -2,7 +2,6 @@ package brute
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"time"
 )

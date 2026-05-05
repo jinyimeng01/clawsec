@@ -6,6 +6,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import { MCPClient } from "./mcp/client";
+import { ToolRegistry } from "./tools/registry";
 import { analyzeTargetPrompt } from "./prompts/analyze";
 import { suggestPoCsPrompt } from "./prompts/suggest";
 import { buildChainPrompt } from "./prompts/chain";
@@ -56,6 +57,7 @@ export class Brain {
   private client: Anthropic;
   private model: string;
   private mcp: MCPClient;
+  private tools: ToolRegistry;
   private conversationHistory: Array<{ role: "user" | "assistant"; content: string }> = [];
 
   constructor(config: BrainConfig) {
@@ -65,10 +67,21 @@ export class Brain {
     });
     this.model = config.model || "claude-sonnet-4-20250514";
     this.mcp = new MCPClient(config.mcpServers || []);
+    this.tools = new ToolRegistry();
   }
 
   async initialize() {
     await this.mcp.connectAll();
+  }
+
+  // ==================== Tool System ====================
+
+  listTools() {
+    return this.tools.getToolDefinitionsForLLM();
+  }
+
+  async callTool(name: string, args: any) {
+    return this.tools.call(name, args);
   }
 
   // ==================== Core Intelligence Methods ====================
@@ -188,6 +201,11 @@ If the user asks for something illegal or unethical, refuse and explain why.`;
   }
 
   async executeTool(params: { tool: string; args: any }) {
+    // Try built-in tools first, then MCP
+    const builtIn = this.tools.get(params.tool);
+    if (builtIn) {
+      return builtIn.call(params.args);
+    }
     return this.mcp.execute(params.tool, params.args);
   }
 

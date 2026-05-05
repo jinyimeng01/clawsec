@@ -66,8 +66,11 @@ For more information: https://github.com/clawsec/clawsec`, constants.AppName, co
 	root.AddCommand(newScanCommand())
 	root.AddCommand(newPoCCommand())
 	root.AddCommand(newBruteCommand())
+	root.AddCommand(newCrawlCommand())
 	root.AddCommand(newAICommand())
 	root.AddCommand(newProductCommand())
+	root.AddCommand(newWorkflowCommand())
+	root.AddCommand(newMCPServeCommand())
 	root.AddCommand(newVersionCommand())
 
 	// Cleanup on exit
@@ -114,15 +117,13 @@ func initialize(cmd *cobra.Command) error {
 	}
 	cfg.ConfigPath = cfgFile
 
-	// Load environment variables
-	config.LoadEnv()
+	// Load config file (YAML + .env + env vars with auto-reflection)
+	if err := cfg.LoadFile(cfgFile); err != nil {
+		logger.Warnf("Failed to load config: %v", err)
+	}
 
-	// Load config file if exists
-	if _, err := os.Stat(cfgFile); err == nil {
-		// TODO: Implement YAML/JSON config file parsing with viper
-		logger.Debugf("Loading config from: %s", cfgFile)
-	} else {
-		// Create default config if it doesn't exist
+	// Ensure default config exists
+	if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
 		if err := config.InitDefaultConfig(); err != nil {
 			logger.Warnf("Failed to create default config: %v", err)
 		}

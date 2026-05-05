@@ -95,6 +95,12 @@ export class RPCServer {
       case "execute_tool":
         return this.brain.executeTool(params);
 
+      case "list_tools":
+        return this.brain.listTools();
+
+      case "call_tool":
+        return this.brain.callTool(params.name || params.tool, params.args || params.arguments || {});
+
       default:
         throw new Error(`Unknown method: ${method}`);
     }

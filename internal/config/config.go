@@ -10,51 +10,51 @@ import (
 
 // Config holds all application configuration
 type Config struct {
-	mu sync.RWMutex
+	mu sync.RWMutex `yaml:"-"`
 
 	// Core settings
-	ConfigPath  string
-	OutputFormat string
-	OutputFile  string
-	Silent      bool
-	Verbose     bool
-	Debug       bool
-	NoColor     bool
+	ConfigPath   string `yaml:"config_path,omitempty"`
+	OutputFormat string `yaml:"output_format,omitempty"`
+	OutputFile   string `yaml:"output_file,omitempty"`
+	Silent       bool   `yaml:"silent,omitempty"`
+	Verbose      bool   `yaml:"verbose,omitempty"`
+	Debug        bool   `yaml:"debug,omitempty"`
+	NoColor      bool   `yaml:"no_color,omitempty"`
 
 	// Scan settings
-	Threads     int
-	Timeout     int
-	Retries     int
-	RateLimit   int
-	UserAgent   string
-	RandomUA    bool
-	Proxy       string
-	Proxies     []string
-	ForceProxy  bool
+	Threads    int      `yaml:"threads,omitempty"`
+	Timeout    int      `yaml:"timeout,omitempty"`
+	Retries    int      `yaml:"retries,omitempty"`
+	RateLimit  int      `yaml:"rate_limit,omitempty"`
+	UserAgent  string   `yaml:"user_agent,omitempty"`
+	RandomUA   bool     `yaml:"random_ua,omitempty"`
+	Proxy      string   `yaml:"proxy,omitempty"`
+	Proxies    []string `yaml:"proxies,omitempty"`
+	ForceProxy bool     `yaml:"force_proxy,omitempty"`
 
 	// Network settings
-	DNSResolver   string
-	MaxRedirects  int
-	InsecureSSL   bool
-	FollowRedirects bool
+	DNSResolver     string `yaml:"dns_resolver,omitempty"`
+	MaxRedirects    int    `yaml:"max_redirects,omitempty"`
+	InsecureSSL     bool   `yaml:"insecure_ssl,omitempty"`
+	FollowRedirects bool   `yaml:"follow_redirects,omitempty"`
 
 	// Attack settings
-	Authorized    bool
-	Stealth       bool
-	EncryptOutput bool
-	EncryptKey    string
+	Authorized    bool   `yaml:"authorized,omitempty"`
+	Stealth       bool   `yaml:"stealth,omitempty"`
+	EncryptOutput bool   `yaml:"encrypt_output,omitempty"`
+	EncryptKey    string `yaml:"encrypt_key,omitempty"`
 
 	// AI settings
-	AIEnabled     bool
-	AIEndpoint    string
-	AIModel       string
-	AIAPIKey      string
+	AIEnabled  bool   `yaml:"-"`
+	AIEndpoint string `yaml:"-"`
+	AIModel    string `yaml:"-"`
+	AIAPIKey   string `yaml:"-"`
 
 	// Product credentials (injected at runtime)
-	Products map[string]ProductConfig
+	Products map[string]ProductConfig `yaml:"-"`
 
 	// Raw config for extensibility
-	raw map[string]interface{}
+	raw map[string]interface{} `yaml:"-"`
 }
 
 type ProductConfig struct {

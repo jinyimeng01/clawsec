@@ -2,11 +2,12 @@ package cli
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/clawsec/clawsec/internal/config"
+	"github.com/clawsec/clawsec/internal/output"
 	"github.com/clawsec/clawsec/pkg/products"
 	"github.com/spf13/cobra"
 )
@@ -49,15 +50,24 @@ Examples:
 			registered := products.List()
 			cfg := config.Get()
 
-			fmt.Println("Registered products:")
+			var rows []map[string]interface{}
 			for _, name := range registered {
-				if pc, ok := cfg.GetProduct(name); ok && pc.URL != "" {
-					fmt.Printf("  ✓ %-15s [%s]\n", name, pc.URL)
-				} else {
-					fmt.Printf("  ✗ %-15s [not configured]\n", name)
+				pc, ok := cfg.GetProduct(name)
+				status := "not configured"
+				url := ""
+				if ok && pc.URL != "" {
+					status = "configured"
+					url = pc.URL
 				}
+				rows = append(rows, map[string]interface{}{
+					"name":   name,
+					"status": status,
+					"url":    url,
+				})
 			}
-			return nil
+
+			renderer := output.NewTableRenderer(os.Stdout)
+			return renderer.Render(rows)
 		},
 	}
 
@@ -131,9 +141,8 @@ Examples:
 				return fmt.Errorf("query failed: %w", err)
 			}
 
-			output, _ := json.MarshalIndent(results, "", "  ")
-			fmt.Println(string(output))
-			return nil
+			renderer := output.NewTableRenderer(os.Stdout)
+			return renderer.Render(results)
 		},
 	}
 
@@ -190,9 +199,8 @@ Examples:
 				return fmt.Errorf("execution failed: %w", err)
 			}
 
-			output, _ := json.MarshalIndent(result, "", "  ")
-			fmt.Println(string(output))
-			return nil
+			renderer := output.NewTableRenderer(os.Stdout)
+			return renderer.Render(result)
 		},
 	}
 
