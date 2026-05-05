@@ -121,7 +121,6 @@ type Progress struct {
 	Closed    int64
 	Filtered  int64
 	StartTime time.Time
-	mu        sync.RWMutex
 }
 
 // NewProgress creates a new progress tracker
