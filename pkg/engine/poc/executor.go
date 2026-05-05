@@ -10,10 +10,10 @@ import (
 
 // Executor executes PoC templates
 type Executor struct {
-	httpClient   *HTTPClient
-	threads      int
-	timeout      int
-	results      chan *Result
+	httpClient *HTTPClient
+	threads    int
+	timeout    int
+	results    chan *Result
 }
 
 // NewExecutor creates a new PoC executor
@@ -187,5 +187,3 @@ func (e *Executor) ExecuteMultiple(ctx context.Context, templates []*Template, t
 
 	return results
 }
-
-

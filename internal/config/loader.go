@@ -221,17 +221,17 @@ func (c *Config) applyEnvOverrides() {
 // toMap exports Config to a map for YAML serialization.
 func (c *Config) toMap() map[string]interface{} {
 	m := map[string]interface{}{
-		"output_format":   c.OutputFormat,
-		"timeout":         c.Timeout,
-		"threads":         c.Threads,
-		"rate_limit":      c.RateLimit,
-		"user_agent":      c.UserAgent,
-		"random_ua":       c.RandomUA,
-		"proxy":           c.Proxy,
-		"force_proxy":     c.ForceProxy,
-		"insecure_ssl":    c.InsecureSSL,
+		"output_format":    c.OutputFormat,
+		"timeout":          c.Timeout,
+		"threads":          c.Threads,
+		"rate_limit":       c.RateLimit,
+		"user_agent":       c.UserAgent,
+		"random_ua":        c.RandomUA,
+		"proxy":            c.Proxy,
+		"force_proxy":      c.ForceProxy,
+		"insecure_ssl":     c.InsecureSSL,
 		"follow_redirects": c.FollowRedirects,
-		"max_redirects":   c.MaxRedirects,
+		"max_redirects":    c.MaxRedirects,
 	}
 
 	if c.AIEnabled || c.AIEndpoint != "" || c.AIModel != "" || c.AIAPIKey != "" {

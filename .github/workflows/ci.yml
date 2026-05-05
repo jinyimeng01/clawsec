@@ -15,6 +15,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.22'
+      - name: Download dependencies
+        run: go mod download
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
@@ -29,6 +31,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.22'
+      - name: Download dependencies
+        run: go mod download
       - name: Run tests
         run: go test -v -race -coverprofile=coverage.out ./...
       - name: Upload coverage
@@ -45,8 +49,10 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.22'
+      - name: Download dependencies
+        run: go mod download
       - name: Build binary
-        run: go build -v ./cmd/clawsec
+        run: go build -v -o clawsec ./cmd/clawsec
       - name: Test binary
         run: ./clawsec version
 

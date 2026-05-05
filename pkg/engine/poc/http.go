@@ -12,10 +12,10 @@ import (
 
 // HTTPClient performs HTTP requests for PoC execution
 type HTTPClient struct {
-	client       *http.Client
-	timeout      time.Duration
+	client         *http.Client
+	timeout        time.Duration
 	followRedirect bool
-	maxRedirects int
+	maxRedirects   int
 }
 
 // NewHTTPClient creates a new HTTP client

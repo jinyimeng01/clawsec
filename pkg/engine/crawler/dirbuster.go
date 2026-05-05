@@ -22,8 +22,8 @@ type DirResult struct {
 
 // DirBuster performs directory enumeration
 type DirBuster struct {
-	client  *http.Client
-	threads int
+	client       *http.Client
+	threads      int
 	statusFilter []int
 	sizeFilter   map[int]bool
 }

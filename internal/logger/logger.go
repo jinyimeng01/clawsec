@@ -37,12 +37,12 @@ func (l Level) String() string {
 }
 
 type Logger struct {
-	level       Level
-	color       bool
-	json        bool
-	timestamp   bool
-	output      *os.File
-	mu          sync.Mutex
+	level     Level
+	color     bool
+	json      bool
+	timestamp bool
+	output    *os.File
+	mu        sync.Mutex
 }
 
 var (
@@ -149,29 +149,44 @@ func (l *Logger) Debugf(format string, args ...interface{}) { l.log(DebugLevel, 
 func (l *Logger) Infof(format string, args ...interface{})  { l.log(InfoLevel, format, args...) }
 func (l *Logger) Warnf(format string, args ...interface{})  { l.log(WarnLevel, format, args...) }
 func (l *Logger) Errorf(format string, args ...interface{}) { l.log(ErrorLevel, format, args...) }
-func (l *Logger) Fatalf(format string, args ...interface{}) { l.log(FatalLevel, format, args...); os.Exit(1) }
+func (l *Logger) Fatalf(format string, args ...interface{}) {
+	l.log(FatalLevel, format, args...)
+	os.Exit(1)
+}
 
 func (l *Logger) SetLevel(level Level) { l.level = level }
 
 // Global shortcuts
 func Debugf(format string, args ...interface{}) {
-	if defaultLogger != nil { defaultLogger.Debugf(format, args...) }
+	if defaultLogger != nil {
+		defaultLogger.Debugf(format, args...)
+	}
 }
 func Infof(format string, args ...interface{}) {
-	if defaultLogger != nil { defaultLogger.Infof(format, args...) }
+	if defaultLogger != nil {
+		defaultLogger.Infof(format, args...)
+	}
 }
 func Warnf(format string, args ...interface{}) {
-	if defaultLogger != nil { defaultLogger.Warnf(format, args...) }
+	if defaultLogger != nil {
+		defaultLogger.Warnf(format, args...)
+	}
 }
 func Errorf(format string, args ...interface{}) {
-	if defaultLogger != nil { defaultLogger.Errorf(format, args...) }
+	if defaultLogger != nil {
+		defaultLogger.Errorf(format, args...)
+	}
 }
 func Fatalf(format string, args ...interface{}) {
-	if defaultLogger != nil { defaultLogger.Fatalf(format, args...) } else {
+	if defaultLogger != nil {
+		defaultLogger.Fatalf(format, args...)
+	} else {
 		fmt.Fprintf(os.Stderr, format+"\n", args...)
 		os.Exit(1)
 	}
 }
 func SetLevel(level Level) {
-	if defaultLogger != nil { defaultLogger.SetLevel(level) }
+	if defaultLogger != nil {
+		defaultLogger.SetLevel(level)
+	}
 }

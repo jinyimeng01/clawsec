@@ -24,12 +24,12 @@ type ConnectScanner struct {
 
 // ScanResult represents a single scan result
 type ScanResult struct {
-	Target      Target
-	Open        bool
-	Banner      string
-	Err         error
-	RTT         time.Duration
-	Timestamp   time.Time
+	Target    Target
+	Open      bool
+	Banner    string
+	Err       error
+	RTT       time.Duration
+	Timestamp time.Time
 }
 
 // NewConnectScanner creates a new connect scanner
@@ -188,9 +188,9 @@ func ResultsToOutput(results []ScanResult) []output.Result {
 			Port:      r.Target.Port,
 			Message:   msg,
 			Metadata: map[string]interface{}{
-				"rtt_ms":    r.RTT.Milliseconds(),
-				"banner":    r.Banner,
-				"ip":        r.Target.IP.String(),
+				"rtt_ms": r.RTT.Milliseconds(),
+				"banner": r.Banner,
+				"ip":     r.Target.IP.String(),
 			},
 		})
 	}

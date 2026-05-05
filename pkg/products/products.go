@@ -30,11 +30,11 @@ type Config struct {
 
 // BaseProduct provides common HTTP client functionality
 type BaseProduct struct {
-	Name_      string
-	Config     Config
-	Client     *http.Client
-	Connected  bool
-	Headers    map[string]string
+	Name_     string
+	Config    Config
+	Client    *http.Client
+	Connected bool
+	Headers   map[string]string
 }
 
 func (b *BaseProduct) Name() string {

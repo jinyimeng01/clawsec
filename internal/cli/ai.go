@@ -32,12 +32,13 @@ func initAIAgent() (*ai.Agent, error) {
 
 func newAICommand() *cobra.Command {
 	var (
-		target   string
-		context_ string
-		_        string // mode reserved
-		model    string
-		apiKey   string
-		endpoint string
+		target       string
+		context_     string
+		_            string // mode reserved
+		model        string
+		apiKey       string
+		endpoint     string
+		reportOutput string
 	)
 
 	aiCmd := &cobra.Command{
@@ -113,7 +114,7 @@ Examples:
 		},
 	}
 	analyzeCmd.Flags().StringVarP(&target, "target", "t", "", "target to analyze")
-	analyzeCmd.Flags().StringVarP(&context_, "context", "c", "", "additional context (services, versions, etc.)")
+	analyzeCmd.Flags().StringVar(&context_, "context", "", "additional context (services, versions, etc.)")
 	analyzeCmd.Flags().StringVar(&model, "model", "", "AI model to use")
 	analyzeCmd.Flags().StringVar(&endpoint, "endpoint", "", "AI API endpoint")
 	analyzeCmd.MarkFlagRequired("target")
@@ -237,7 +238,7 @@ Examples:
 	}
 	reportCmd.Flags().StringVarP(&target, "target", "t", "", "target name")
 	reportCmd.Flags().StringVarP(&context_, "input", "i", "", "input findings file (JSON)")
-	reportCmd.Flags().StringVarP(&target, "output", "o", "report.md", "output report file")
+	reportCmd.Flags().StringVar(&reportOutput, "output", "report.md", "output report file")
 
 	// Chat subcommand
 	chatCmd := &cobra.Command{

@@ -60,6 +60,6 @@ func (p *MySQLProtocol) Try(ctx context.Context, target, username, password stri
 	// Note: Full MySQL authentication requires implementing the handshake protocol
 	// including scramble parsing and SHA1 hashing. For production use, consider
 	// using a proper MySQL driver.
-	
+
 	return result, nil
 }

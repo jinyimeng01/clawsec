@@ -128,9 +128,9 @@ func TestMatchDSL(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		expr    string
-		want    bool
+		name string
+		expr string
+		want bool
 	}{
 		{"status check", "status_code == 200", true},
 		{"body contains", `contains("Hello World", "World")`, true},

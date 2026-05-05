@@ -1,13 +1,13 @@
 package constants
 
 const (
-	AppName    = "ClawSec"
-	AppSlug    = "clawsec"
-	Version    = "0.1.0-alpha"
-	BuildTime  = "dev"
-	GitCommit  = "dev"
-	GitBranch  = "dev"
-	GoVersion  = "1.22"
+	AppName   = "ClawSec"
+	AppSlug   = "clawsec"
+	Version   = "0.1.0-alpha"
+	BuildTime = "dev"
+	GitCommit = "dev"
+	GitBranch = "dev"
+	GoVersion = "1.22"
 
 	// Default paths
 	DefaultConfigDir  = ".clawsec"
@@ -16,16 +16,16 @@ const (
 	DefaultAuditFile  = "audit.log"
 
 	// Default network settings
-	DefaultTimeout       = 5
-	DefaultRetries       = 1
-	DefaultRateLimit     = 150
-	DefaultMaxRedirects  = 10
-	DefaultUserAgent     = "ClawSec/" + Version
+	DefaultTimeout      = 5
+	DefaultRetries      = 1
+	DefaultRateLimit    = 150
+	DefaultMaxRedirects = 10
+	DefaultUserAgent    = "ClawSec/" + Version
 
 	// Scan defaults
-	DefaultPortRange     = "top100"
-	DefaultThreads       = 50
-	DefaultScanTimeout   = 3
+	DefaultPortRange   = "top100"
+	DefaultThreads     = 50
+	DefaultScanTimeout = 3
 )
 
 // UserAgentList for rotation

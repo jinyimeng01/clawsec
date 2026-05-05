@@ -10,8 +10,8 @@ import (
 	"github.com/clawsec/clawsec/internal/constants"
 	"github.com/clawsec/clawsec/internal/logger"
 	"github.com/clawsec/clawsec/internal/output"
-	"github.com/clawsec/clawsec/pkg/engine/scanner"
 	"github.com/clawsec/clawsec/internal/runner"
+	"github.com/clawsec/clawsec/pkg/engine/scanner"
 	"github.com/spf13/cobra"
 )
 

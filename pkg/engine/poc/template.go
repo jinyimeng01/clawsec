@@ -38,61 +38,61 @@ func (s *StringOrSlice) UnmarshalYAML(node *yaml.Node) error {
 
 // Template represents a Nuclei-compatible PoC template
 type Template struct {
-	ID       string      `yaml:"id" json:"id"`
-	Info     TemplateInfo `yaml:"info" json:"info"`
+	ID        string            `yaml:"id" json:"id"`
+	Info      TemplateInfo      `yaml:"info" json:"info"`
 	Variables map[string]string `yaml:"variables,omitempty" json:"variables,omitempty"`
-	HTTP     []HTTPRequest `yaml:"http,omitempty" json:"http,omitempty"`
-	TCP      []TCPRequest  `yaml:"tcp,omitempty" json:"tcp,omitempty"`
-	DNS      []DNSRequest  `yaml:"dns,omitempty" json:"dns,omitempty"`
-	SSL      []SSLRequest  `yaml:"ssl,omitempty" json:"ssl,omitempty"`
-	Workflow []WorkflowStep `yaml:"workflow,omitempty" json:"workflow,omitempty"`
-	Path     string        `yaml:"-" json:"-"`
+	HTTP      []HTTPRequest     `yaml:"http,omitempty" json:"http,omitempty"`
+	TCP       []TCPRequest      `yaml:"tcp,omitempty" json:"tcp,omitempty"`
+	DNS       []DNSRequest      `yaml:"dns,omitempty" json:"dns,omitempty"`
+	SSL       []SSLRequest      `yaml:"ssl,omitempty" json:"ssl,omitempty"`
+	Workflow  []WorkflowStep    `yaml:"workflow,omitempty" json:"workflow,omitempty"`
+	Path      string            `yaml:"-" json:"-"`
 }
 
 // TemplateInfo holds template metadata
 type TemplateInfo struct {
-	Name        string            `yaml:"name" json:"name"`
-	Author      string            `yaml:"author" json:"author"`
-	Severity    string            `yaml:"severity" json:"severity"`
-	Description string            `yaml:"description,omitempty" json:"description,omitempty"`
-	Reference   StringOrSlice     `yaml:"reference,omitempty" json:"reference,omitempty"`
-	Tags        StringOrSlice     `yaml:"tags,omitempty" json:"tags,omitempty"`
-	Metadata    map[string]string `yaml:"metadata,omitempty" json:"metadata,omitempty"`
-	Classification *Classification `yaml:"classification,omitempty" json:"classification,omitempty"`
+	Name           string            `yaml:"name" json:"name"`
+	Author         string            `yaml:"author" json:"author"`
+	Severity       string            `yaml:"severity" json:"severity"`
+	Description    string            `yaml:"description,omitempty" json:"description,omitempty"`
+	Reference      StringOrSlice     `yaml:"reference,omitempty" json:"reference,omitempty"`
+	Tags           StringOrSlice     `yaml:"tags,omitempty" json:"tags,omitempty"`
+	Metadata       map[string]string `yaml:"metadata,omitempty" json:"metadata,omitempty"`
+	Classification *Classification   `yaml:"classification,omitempty" json:"classification,omitempty"`
 }
 
 // Classification holds vulnerability classification
 type Classification struct {
-	CVSSScore    float64  `yaml:"cvss-score,omitempty" json:"cvss-score,omitempty"`
-	CVSSMetrics  string   `yaml:"cvss-metrics,omitempty" json:"cvss-metrics,omitempty"`
-	CWEID        []string `yaml:"cwe-id,omitempty" json:"cwe-id,omitempty"`
-	CVEID        []string `yaml:"cve-id,omitempty" json:"cve-id,omitempty"`
-	EPSSScore    float64  `yaml:"epss-score,omitempty" json:"epss-score,omitempty"`
+	CVSSScore   float64  `yaml:"cvss-score,omitempty" json:"cvss-score,omitempty"`
+	CVSSMetrics string   `yaml:"cvss-metrics,omitempty" json:"cvss-metrics,omitempty"`
+	CWEID       []string `yaml:"cwe-id,omitempty" json:"cwe-id,omitempty"`
+	CVEID       []string `yaml:"cve-id,omitempty" json:"cve-id,omitempty"`
+	EPSSScore   float64  `yaml:"epss-score,omitempty" json:"epss-score,omitempty"`
 }
 
 // HTTPRequest represents an HTTP request block
 type HTTPRequest struct {
-	Method             string            `yaml:"method,omitempty" json:"method,omitempty"`
-	Path               []string          `yaml:"path" json:"path"`
-	Headers            map[string]string `yaml:"headers,omitempty" json:"headers,omitempty"`
-	Body               string            `yaml:"body,omitempty" json:"body,omitempty"`
-	Raw                []string          `yaml:"raw,omitempty" json:"raw,omitempty"`
-	MatchersCondition  string            `yaml:"matchers-condition,omitempty" json:"matchers-condition,omitempty"`
-	Matchers           []Matcher         `yaml:"matchers" json:"matchers"`
-	Extractors         []Extractor       `yaml:"extractors,omitempty" json:"extractors,omitempty"`
-	StopAtFirstMatch   bool              `yaml:"stop-at-first-match,omitempty" json:"stop-at-first-match,omitempty"`
-	CookieReuse        bool              `yaml:"cookie-reuse,omitempty" json:"cookie-reuse,omitempty"`
-	Redirects          bool              `yaml:"redirects,omitempty" json:"redirects,omitempty"`
-	MaxRedirects       int               `yaml:"max-redirects,omitempty" json:"max-redirects,omitempty"`
+	Method            string            `yaml:"method,omitempty" json:"method,omitempty"`
+	Path              []string          `yaml:"path" json:"path"`
+	Headers           map[string]string `yaml:"headers,omitempty" json:"headers,omitempty"`
+	Body              string            `yaml:"body,omitempty" json:"body,omitempty"`
+	Raw               []string          `yaml:"raw,omitempty" json:"raw,omitempty"`
+	MatchersCondition string            `yaml:"matchers-condition,omitempty" json:"matchers-condition,omitempty"`
+	Matchers          []Matcher         `yaml:"matchers" json:"matchers"`
+	Extractors        []Extractor       `yaml:"extractors,omitempty" json:"extractors,omitempty"`
+	StopAtFirstMatch  bool              `yaml:"stop-at-first-match,omitempty" json:"stop-at-first-match,omitempty"`
+	CookieReuse       bool              `yaml:"cookie-reuse,omitempty" json:"cookie-reuse,omitempty"`
+	Redirects         bool              `yaml:"redirects,omitempty" json:"redirects,omitempty"`
+	MaxRedirects      int               `yaml:"max-redirects,omitempty" json:"max-redirects,omitempty"`
 }
 
 // TCPRequest represents a TCP request block
 type TCPRequest struct {
-	Host               []string    `yaml:"host,omitempty" json:"host,omitempty"`
-	Inputs             []TCPInput  `yaml:"inputs" json:"inputs"`
-	MatchersCondition  string      `yaml:"matchers-condition,omitempty" json:"matchers-condition,omitempty"`
-	Matchers           []Matcher   `yaml:"matchers" json:"matchers"`
-	Extractors         []Extractor `yaml:"extractors,omitempty" json:"extractors,omitempty"`
+	Host              []string    `yaml:"host,omitempty" json:"host,omitempty"`
+	Inputs            []TCPInput  `yaml:"inputs" json:"inputs"`
+	MatchersCondition string      `yaml:"matchers-condition,omitempty" json:"matchers-condition,omitempty"`
+	Matchers          []Matcher   `yaml:"matchers" json:"matchers"`
+	Extractors        []Extractor `yaml:"extractors,omitempty" json:"extractors,omitempty"`
 }
 
 // TCPInput represents a TCP input
@@ -152,10 +152,10 @@ type Extractor struct {
 
 // WorkflowStep represents a workflow step
 type WorkflowStep struct {
-	Template string            `yaml:"template" json:"template"`
-	Matchers []WorkflowMatcher `yaml:"matchers,omitempty" json:"matchers,omitempty"`
-	Subtemplates []string      `yaml:"subtemplates,omitempty" json:"subtemplates,omitempty"`
-	Variables map[string]string `yaml:"variables,omitempty" json:"variables,omitempty"`
+	Template     string            `yaml:"template" json:"template"`
+	Matchers     []WorkflowMatcher `yaml:"matchers,omitempty" json:"matchers,omitempty"`
+	Subtemplates []string          `yaml:"subtemplates,omitempty" json:"subtemplates,omitempty"`
+	Variables    map[string]string `yaml:"variables,omitempty" json:"variables,omitempty"`
 }
 
 // WorkflowMatcher represents a workflow matcher
@@ -165,32 +165,32 @@ type WorkflowMatcher struct {
 
 // Result represents a template execution result
 type Result struct {
-	TemplateID    string                 `json:"template-id"`
-	TemplatePath  string                 `json:"template-path"`
-	Info          TemplateInfo           `json:"info"`
-	Type          string                 `json:"type"`
-	Host          string                 `json:"host"`
-	Port          string                 `json:"port,omitempty"`
-	URL           string                 `json:"url,omitempty"`
-	MatchedAt     time.Time              `json:"matched-at"`
-	MatcherName   string                 `json:"matcher-name,omitempty"`
-	ExtractedResults []string            `json:"extracted-results,omitempty"`
-	Request       string                 `json:"request,omitempty"`
-	Response      string                 `json:"response,omitempty"`
-	CurlCommand   string                 `json:"curl-command,omitempty"`
-	Meta          map[string]interface{} `json:"meta,omitempty"`
+	TemplateID       string                 `json:"template-id"`
+	TemplatePath     string                 `json:"template-path"`
+	Info             TemplateInfo           `json:"info"`
+	Type             string                 `json:"type"`
+	Host             string                 `json:"host"`
+	Port             string                 `json:"port,omitempty"`
+	URL              string                 `json:"url,omitempty"`
+	MatchedAt        time.Time              `json:"matched-at"`
+	MatcherName      string                 `json:"matcher-name,omitempty"`
+	ExtractedResults []string               `json:"extracted-results,omitempty"`
+	Request          string                 `json:"request,omitempty"`
+	Response         string                 `json:"response,omitempty"`
+	CurlCommand      string                 `json:"curl-command,omitempty"`
+	Meta             map[string]interface{} `json:"meta,omitempty"`
 }
 
 // ExecutionContext holds runtime execution state
 type ExecutionContext struct {
-	BaseURL    string
-	Host       string
-	Port       int
-	Scheme     string
-	Variables  map[string]interface{}
-	Extracted  map[string]interface{}
-	Cookies    map[string]string
-	Template   *Template
+	BaseURL   string
+	Host      string
+	Port      int
+	Scheme    string
+	Variables map[string]interface{}
+	Extracted map[string]interface{}
+	Cookies   map[string]string
+	Template  *Template
 }
 
 // NewExecutionContext creates a new execution context

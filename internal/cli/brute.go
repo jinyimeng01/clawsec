@@ -9,14 +9,14 @@ import (
 
 func newBruteCommand() *cobra.Command {
 	var (
-		targets      []string
-		usernames    []string
-		passwords    []string
-		userFile     string
-		passFile     string
-		threads      int
-		timeout      int
-		delay        int
+		targets       []string
+		usernames     []string
+		passwords     []string
+		userFile      string
+		passFile      string
+		threads       int
+		timeout       int
+		delay         int
 		stopOnSuccess bool
 	)
 

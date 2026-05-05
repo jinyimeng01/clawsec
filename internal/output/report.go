@@ -275,10 +275,10 @@ func calculateRiskColor(total int, counts map[string]int) string {
 
 func (r *ReportGenerator) generateJSON(findings []Result, target string) string {
 	report := map[string]interface{}{
-		"target":    target,
-		"date":      time.Now().Format(time.RFC3339),
-		"findings":  findings,
-		"summary":   generateSummary(findings),
+		"target":   target,
+		"date":     time.Now().Format(time.RFC3339),
+		"findings": findings,
+		"summary":  generateSummary(findings),
 	}
 	// Simple JSON serialization would be done by caller
 	return fmt.Sprintf("%v", report)
@@ -301,10 +301,10 @@ func getSeverityEmoji(severity string) string {
 
 func getRemediation(severity, vulnType string) string {
 	remediations := map[string]string{
-		"port":      "Review necessity of exposed service. Implement firewall rules or VPN access.",
+		"port":          "Review necessity of exposed service. Implement firewall rules or VPN access.",
 		"vulnerability": "Apply vendor patch immediately. Implement virtual patch via WAF if immediate patching not possible.",
 		"weak_password": "Enforce strong password policy. Implement MFA. Rotate compromised credentials.",
-		"info":      "Review information disclosure. Minimize exposed metadata and version information.",
+		"info":          "Review information disclosure. Minimize exposed metadata and version information.",
 	}
 
 	if r, ok := remediations[vulnType]; ok {
@@ -319,7 +319,7 @@ func generateSummary(findings []Result) map[string]interface{} {
 		severityCounts[f.Severity]++
 	}
 	return map[string]interface{}{
-		"total":     len(findings),
-		"severity":  severityCounts,
+		"total":    len(findings),
+		"severity": severityCounts,
 	}
 }

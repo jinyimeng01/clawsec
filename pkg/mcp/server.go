@@ -12,9 +12,9 @@ import (
 
 // Server implements a built-in MCP server for ClawSec
 type Server struct {
-	port   int
-	tools  map[string]MCPTool
-	http   *http.Server
+	port  int
+	tools map[string]MCPTool
+	http  *http.Server
 }
 
 // MCPTool represents an MCP tool definition

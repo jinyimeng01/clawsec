@@ -8,11 +8,11 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"html/template"
 	"math/big"
 	"net/url"
 	"regexp"
 	"strings"
-	"html/template"
 )
 
 var (

@@ -17,19 +17,19 @@ import (
 
 func newPoCCommand() *cobra.Command {
 	var (
-		targetURLs   []string
-		templates    []string
-		templateDir  string
-		severity     []string
-		tags         []string
-		workflow     string
-		_ bool // updateTemplates reserved
-		_ bool // listTemplates reserved
-		stats        bool
-		threads      int
-		bulkSize     int
-		retries      int
-		timeout      int
+		targetURLs  []string
+		templates   []string
+		templateDir string
+		severity    []string
+		tags        []string
+		workflow    string
+		_           bool // updateTemplates reserved
+		_           bool // listTemplates reserved
+		stats       bool
+		threads     int
+		bulkSize    int
+		retries     int
+		timeout     int
 	)
 
 	pocCmd := &cobra.Command{

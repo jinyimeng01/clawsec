@@ -163,7 +163,7 @@ func LoadEnv() {
 			}
 			key := strings.TrimPrefix(parts[0], "CLAWSEC_")
 			upperKey := strings.ToUpper(key)
-			
+
 			// Check if it's a product config
 			for _, prod := range []string{"SAFELINE", "XRAY", "CLOUDWALKER", "TANSWER", "DDR"} {
 				if strings.HasPrefix(upperKey, prod+"_") {

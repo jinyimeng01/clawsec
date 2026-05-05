@@ -15,13 +15,13 @@ import (
 type Format string
 
 const (
-	FormatText   Format = "text"
-	FormatJSON   Format = "json"
-	FormatJSONL  Format = "jsonl"
-	FormatCSV    Format = "csv"
+	FormatText     Format = "text"
+	FormatJSON     Format = "json"
+	FormatJSONL    Format = "jsonl"
+	FormatCSV      Format = "csv"
 	FormatMarkdown Format = "markdown"
-	FormatHTML   Format = "html"
-	FormatSilent Format = "silent"
+	FormatHTML     Format = "html"
+	FormatSilent   Format = "silent"
 )
 
 // Result represents a generic scan result
@@ -148,7 +148,7 @@ func (w *Writer) writeText(r Result) error {
 
 	var parts []string
 	parts = append(parts, fmt.Sprintf("%s[%s]%s", color, strings.ToUpper(r.Level), reset))
-	
+
 	if r.Timestamp.IsZero() {
 		r.Timestamp = time.Now()
 	}
