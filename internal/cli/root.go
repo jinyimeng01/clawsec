@@ -60,6 +60,7 @@ For more information: https://github.com/clawsec/clawsec`, constants.AppName, co
 	root.PersistentFlags().BoolVar(&debug, "debug", false, "debug mode (maximum verbosity)")
 	root.PersistentFlags().BoolVar(&noColor, "no-color", false, "disable colored output")
 	root.PersistentFlags().BoolVar(&authorized, "authorized", false, "I am authorized to perform offensive security testing on the target")
+	root.PersistentFlags().Bool("ai", false, "Enable AI assistant for intelligent analysis")
 
 	// Add subcommands
 	root.AddCommand(newScanCommand())
@@ -68,6 +69,13 @@ For more information: https://github.com/clawsec/clawsec`, constants.AppName, co
 	root.AddCommand(newAICommand())
 	root.AddCommand(newProductCommand())
 	root.AddCommand(newVersionCommand())
+
+	// Cleanup on exit
+	cobra.OnFinalize(func() {
+		if globalAgent != nil {
+			globalAgent.Stop()
+		}
+	})
 
 	return root
 }
