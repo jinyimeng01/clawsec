@@ -50,7 +50,6 @@ type Writer struct {
 	mu       sync.Mutex
 	csvW     *csv.Writer
 	firstRow bool
-	results  []Result
 }
 
 // NewWriter creates a new output writer

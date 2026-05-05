@@ -25,7 +25,6 @@ type DirBuster struct {
 	client       *http.Client
 	threads      int
 	statusFilter []int
-	sizeFilter   map[int]bool
 }
 
 // SetStatusFilter overrides the default status code filter

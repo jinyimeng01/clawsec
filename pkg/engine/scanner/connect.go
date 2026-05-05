@@ -58,7 +58,9 @@ func (s *ConnectScanner) Scan(ctx context.Context, targets []Target) <-chan Scan
 		// Create rate limiter
 		var limiter <-chan time.Time
 		if s.rateLimit > 0 {
-			limiter = time.Tick(time.Second / time.Duration(s.rateLimit))
+			ticker := time.NewTicker(time.Second / time.Duration(s.rateLimit))
+			defer ticker.Stop()
+			limiter = ticker.C
 		}
 
 		// Worker pool

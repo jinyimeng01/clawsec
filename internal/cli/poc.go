@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/clawsec/clawsec/internal/config"
@@ -206,8 +205,4 @@ Examples:
 	return pocCmd
 }
 
-// isTemplate checks if file is a valid template
-func isTemplate(path string) bool {
-	ext := strings.ToLower(filepath.Ext(path))
-	return ext == ".yaml" || ext == ".yml"
-}
+

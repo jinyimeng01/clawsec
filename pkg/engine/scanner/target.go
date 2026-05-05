@@ -138,11 +138,7 @@ func resolveHost(host string) ([]net.IP, error) {
 		return nil, err
 	}
 
-	var result []net.IP
-	for _, ip := range ips {
-		result = append(result, ip)
-	}
-	return result, nil
+	return ips, nil
 }
 
 func parsePort(s string) (int, error) {

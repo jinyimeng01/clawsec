@@ -120,10 +120,7 @@ func matchWords(m Matcher, data string) bool {
 		}
 	}
 
-	if condition == "and" {
-		return true
-	}
-	return false
+	return condition == "and"
 }
 
 func matchRegex(m Matcher, data string) bool {
@@ -150,10 +147,7 @@ func matchRegex(m Matcher, data string) bool {
 		}
 	}
 
-	if condition == "and" {
-		return true
-	}
-	return false
+	return condition == "and"
 }
 
 func matchStatus(m Matcher, resp *ResponseData) bool {
@@ -206,10 +200,7 @@ func matchDSL(m Matcher, resp *ResponseData, vars map[string]interface{}) bool {
 		}
 	}
 
-	if condition == "and" {
-		return true
-	}
-	return false
+	return condition == "and"
 }
 
 func matchSize(m Matcher, size int) bool {
